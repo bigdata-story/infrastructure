@@ -99,5 +99,4 @@ services:
 networks:
   overlay:
     external: true
-    driver: bridge
-    name: big_data_network
+    name: story_network

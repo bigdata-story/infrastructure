@@ -3,7 +3,7 @@
 fisrt of all create network on docker
 
 ```bash
-docker network create big_data_network
+docker network create story_network
 ```
 
 ### cassandra
@@ -17,6 +17,6 @@ docker-compose up -d
 
 for run cqlsh
 ```bash
-docker run --rm -it --network big_data_network nuvo/docker-cqlsh cqlsh cassandra-cluster 9042 --cqlversion='3.4.4'
+docker run --rm -it --network story_network nuvo/docker-cqlsh cqlsh cassandra-cluster 9042 --cqlversion='3.4.4'
 ```
 
