@@ -1,0 +1,103 @@
+version: "3.9"
+
+services:
+
+  cassandra0:
+    image: cassandra:3.11.13
+    volumes:
+      - "./cassandra_data_0:/var/lib/cassandra"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
+      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
+
+
+  cassandra1:
+    image: cassandra:3.11.13
+    volumes:
+      - "./cassandra_data_1:/var/lib/cassandra"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
+      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
+
+
+  cassandra2:
+    image: cassandra:3.11.13
+    volumes:
+      - "./cassandra_data_2:/var/lib/cassandra"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
+      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+    depends_on:
+      - cassandra0
+      - cassandra1
+    links:
+      - cassandra0
+      - cassandra1
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
+
+
+  loadbalancer:
+    hostname: cassandra-cluster
+    image: haproxy:2.5
+    volumes:
+      - "./haproxy:/usr/local/etc/haproxy:ro"
+    depends_on:
+      - cassandra0
+      - cassandra1
+      - cassandra2
+    links:
+      - cassandra0
+      - cassandra1
+      - cassandra2
+    networks:
+      - overlay
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+networks:
+  overlay:
+    external: true
+    driver: bridge
+    name: big_data_network
