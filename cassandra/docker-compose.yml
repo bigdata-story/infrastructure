@@ -8,7 +8,7 @@ services:
       - "./cassandra_data_0:/var/lib/cassandra"
     environment:
       - "CASSANDRA_SEEDS=cassandra0,cassandra1"
-      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     networks:
@@ -29,7 +29,7 @@ services:
       - "./cassandra_data_1:/var/lib/cassandra"
     environment:
       - "CASSANDRA_SEEDS=cassandra0,cassandra1"
-      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     networks:
@@ -50,7 +50,7 @@ services:
       - "./cassandra_data_2:/var/lib/cassandra"
     environment:
       - "CASSANDRA_SEEDS=cassandra0,cassandra1"
-      - "CASSANDRA_CLUSTER_NAME=Cassandra Cluster"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
     depends_on:
