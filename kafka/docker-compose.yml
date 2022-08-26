@@ -1,59 +1,68 @@
-version: '3'
+version: '3.9'
+
 services:
+
   zookeeper1:
-    image: 'bitnami/zookeeper:latest'
-    container_name: zookeeper1
-    hostname: zookeeper1
-    ports:
-      - '2181:2181'
-      - '6001:2888'
-      - '6051:3888'
+    image: bitnami/zookeeper:3.7.1
+    volumes:
+      - zookeeper_volume1:/bitnami/zookeeper
     environment:
       - ZOO_SERVER_ID=1
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,zookeeper3:2888:3888
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
 
   zookeeper2:
-    image: 'bitnami/zookeeper:latest'
-    container_name: zookeeper2
-    hostname: zookeeper2
-    ports:
-      - '2182:2181'
-      - '6002:2888'
-      - '6052:3888'
+    image: bitnami/zookeeper:3.7.1
+    volumes:
+      - zookeeper_volume2:/bitnami/zookeeper
     environment:
       - ZOO_SERVER_ID=2
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,zookeeper3:2888:3888
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
 
   zookeeper3:
-    image: 'bitnami/zookeeper:latest'
-    container_name: zookeeper3
-    hostname: zookeeper3
-    ports:
-      - '2183:2181'
-      - '6003:2888'
-      - '6053:3888'
+    image: bitnami/zookeeper:3.7.1
+    volumes:
+      - zookeeper_volume3:/bitnami/zookeeper
     environment:
       - ZOO_SERVER_ID=3
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_SERVERS=zookeeper1:2888:3888,zookeeper2:2888:3888,zookeeper3:2888:3888
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
 
   kafka1:
-    image: 'bitnami/kafka:3.1'
-    container_name: kafka1
-    hostname: kafka1
-    ports:
-      - '9092:9092'
+    image: bitnami/kafka:3.2.1
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
-      # - KAFKA_CREATE_TOPICS="topic1:5:1,topic2:5:1"
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
@@ -61,19 +70,22 @@ services:
       - zookeeper2
       - zookeeper3
     volumes:
-      - kafka_vol1:/kafka/brocker1
+      - kafka_volume1:/bitnami/kafka
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
 
   kafka2:
-    image: 'bitnami/kafka:3.1'
-    container_name: kafka2
-    hostname: kafka2
-    ports:
-      - '9093:9092'
+    image: bitnami/kafka:3.2.1
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
-      # - KAFKA_CREATE_TOPICS="topic1:5:1,topic2:5:1"
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
@@ -81,19 +93,22 @@ services:
       - zookeeper2
       - zookeeper3
     volumes:
-      - kafka_vol2:/kafka/brocker2
+      - kafka_volume2:/bitnami/kafka
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
 
   kafka3:
-    image: 'bitnami/kafka:3.1'
-    container_name: kafka3
-    hostname: kafka3
-    ports:
-      - '9094:9092'
+    image: bitnami/kafka:3.1
     environment:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
-      # - KAFKA_CREATE_TOPICS="topic1:5:1,topic2:5:1"
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
@@ -101,10 +116,18 @@ services:
       - zookeeper2
       - zookeeper3
     volumes:
-      - kafka_vol3:/kafka/brocker3
+      - kafka_volume3:/bitnami/kafka
     networks:
-      - story-network
-        
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
+
   kafdrop:
     image: obsidiandynamics/kafdrop
     restart: "no"
@@ -119,13 +142,25 @@ services:
       - "kafka2"
       - "kafka3"
     networks:
-      - story-network
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 50M
+        reservations:
+          cpus: "0.25"
+          memory: 20M
 
 volumes:
-  kafka_vol1:
-  kafka_vol2:
-  kafka_vol3:
+  zookeeper_volume1:
+  zookeeper_volume2:
+  zookeeper_volume3:
+  kafka_volume1:
+  kafka_volume2:
+  kafka_volume3:
 
 networks:
-    story-network:
-      external: true
+  overlay:
+    external: true
+    name: story-network
