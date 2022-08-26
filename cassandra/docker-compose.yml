@@ -1,34 +1,13 @@
-version: "3.9"
+version: '3.9'
 
 services:
-
-  cassandra0:
-    image: cassandra:3.11.13
-    volumes:
-      - "./cassandra_data_0:/var/lib/cassandra"
-    environment:
-      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
-      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
-      - "CASSANDRA_DC=dc1"
-      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
-    networks:
-      - overlay
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 4G
-        reservations:
-          cpus: "0.5"
-          memory: 1G
-
 
   cassandra1:
     image: cassandra:3.11.13
     volumes:
-      - "./cassandra_data_1:/var/lib/cassandra"
+      - "cassandra_volume1:/var/lib/cassandra"
     environment:
-      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
+      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
@@ -43,13 +22,32 @@ services:
           cpus: "0.5"
           memory: 1G
 
-
   cassandra2:
     image: cassandra:3.11.13
     volumes:
-      - "./cassandra_data_2:/var/lib/cassandra"
+      - "cassandra_volume2:/var/lib/cassandra"
     environment:
-      - "CASSANDRA_SEEDS=cassandra0,cassandra1"
+      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 1G
+
+  cassandra3:
+    image: cassandra:3.11.13
+    volumes:
+      - "cassandra_volume3:/var/lib/cassandra"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
@@ -69,7 +67,6 @@ services:
         reservations:
           cpus: "0.5"
           memory: 1G
-
 
   loadbalancer:
     hostname: cassandra-cluster
@@ -77,13 +74,13 @@ services:
     volumes:
       - "./haproxy:/usr/local/etc/haproxy:ro"
     depends_on:
-      - cassandra0
       - cassandra1
       - cassandra2
+      - cassandra3
     links:
-      - cassandra0
       - cassandra1
       - cassandra2
+      - cassandra3
     networks:
       - overlay
     deploy:
@@ -96,7 +93,12 @@ services:
           cpus: "0.25"
           memory: 128M
 
+volumes:
+  cassandra_volume1:
+  cassandra_volume2:
+  cassandra_volume3:
+
 networks:
   overlay:
     external: true
-    name: story_network
+    name: story-network
