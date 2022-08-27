@@ -69,6 +69,10 @@ services:
       - zookeeper1
       - zookeeper2
       - zookeeper3
+    links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
     volumes:
       - kafka_volume1:/bitnami/kafka
     networks:
@@ -92,6 +96,10 @@ services:
       - zookeeper1
       - zookeeper2
       - zookeeper3
+    links:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
     volumes:
       - kafka_volume2:/bitnami/kafka
     networks:
@@ -112,6 +120,10 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    links:
       - zookeeper1
       - zookeeper2
       - zookeeper3
@@ -147,10 +159,10 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: 50M
+          memory: 512M
         reservations:
           cpus: "0.25"
-          memory: 20M
+          memory: 128M
 
 volumes:
   zookeeper_volume1:
