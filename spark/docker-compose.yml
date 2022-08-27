@@ -101,7 +101,7 @@ services:
     ports:
       - "18081:18081"
     volumes:
-      - history_vol:/tmp/spark-events
+      - history_volume:/tmp/spark-events
     networks:
       - overlay
     deploy:
