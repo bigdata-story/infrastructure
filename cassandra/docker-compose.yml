@@ -5,7 +5,7 @@ services:
   cassandra1:
     image: cassandra:3.11.13
     volumes:
-      - "cassandra_volume1:/var/lib/cassandra"
+      - cassandra_volume1:/var/lib/cassandra
     environment:
       - "CASSANDRA_SEEDS=cassandra1,cassandra2"
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
@@ -25,7 +25,7 @@ services:
   cassandra2:
     image: cassandra:3.11.13
     volumes:
-      - "cassandra_volume2:/var/lib/cassandra"
+      - cassandra_volume2:/var/lib/cassandra
     environment:
       - "CASSANDRA_SEEDS=cassandra1,cassandra2"
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
@@ -45,7 +45,7 @@ services:
   cassandra3:
     image: cassandra:3.11.13
     volumes:
-      - "cassandra_volume3:/var/lib/cassandra"
+      - cassandra_volume3:/var/lib/cassandra
     environment:
       - "CASSANDRA_SEEDS=cassandra1,cassandra2"
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
@@ -72,7 +72,7 @@ services:
     hostname: cassandra-cluster
     image: haproxy:2.5
     volumes:
-      - "./haproxy:/usr/local/etc/haproxy:ro"
+      - ./haproxy:/usr/local/etc/haproxy:ro
     depends_on:
       - cassandra1
       - cassandra2
