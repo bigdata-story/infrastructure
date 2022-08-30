@@ -96,6 +96,7 @@ services:
       - zookeeper1
       - zookeeper2
       - zookeeper3
+      - kafka1
     links:
       - zookeeper1
       - zookeeper2
@@ -123,6 +124,7 @@ services:
       - zookeeper1
       - zookeeper2
       - zookeeper3
+      - kafka2
     links:
       - zookeeper1
       - zookeeper2
