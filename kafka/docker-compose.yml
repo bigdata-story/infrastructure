@@ -148,7 +148,7 @@ services:
 
   kafdrop:
     image: obsidiandynamics/kafdrop
-    restart: "no"
+    restart: always
     ports:
       - "9010:9010"
     environment:
