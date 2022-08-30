@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:3.7.1
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - dev_zookeeper_volume:/bitnami/zookeeper
+    environment:
+      - ZOO_SERVER_ID=1
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_SERVERS=zookeeper:2888:3888
+
+  kafka:
+    image: bitnami/kafka:3.2.1
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper
+    volumes:
+      - dev_kafka_volume:/bitnami/kafka
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: always
+    ports:
+      - "9010:9010"
+    environment:
+      SERVER_PORT: "9010"
+      KAFKA_BROKERCONNECT: "kafka:9092"
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - kafka
+
+volumes:
+  dev_zookeeper_volume:
+  dev_kafka_volume:
