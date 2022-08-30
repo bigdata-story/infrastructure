@@ -4,6 +4,7 @@ services:
 
   cassandra1:
     image: cassandra:3.11.13
+    restart: always
     volumes:
       - cassandra_volume1:/var/lib/cassandra
     environment:
@@ -24,6 +25,7 @@ services:
 
   cassandra2:
     image: cassandra:3.11.13
+    restart: always
     volumes:
       - cassandra_volume2:/var/lib/cassandra
     environment:
@@ -44,6 +46,7 @@ services:
 
   cassandra3:
     image: cassandra:3.11.13
+    restart: always
     volumes:
       - cassandra_volume3:/var/lib/cassandra
     environment:
@@ -71,6 +74,7 @@ services:
   loadbalancer:
     hostname: cassandra-cluster
     image: haproxy:2.5
+    restart: always
     volumes:
       - ./haproxy:/usr/local/etc/haproxy:ro
     depends_on:
