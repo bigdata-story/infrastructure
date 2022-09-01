@@ -21,7 +21,7 @@ services:
           cpus: "0.5"
           memory: 512M
 
-  spark-worker-1:
+  spark-worker:
     image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
     depends_on:
       - spark-master
@@ -33,59 +33,10 @@ services:
       - SPARK_EXECUTOR_MEMORY=1G
       - SPARK_WORKLOAD=worker
       - SPARK_WORKER_PORT=8081
-      - SPARK_LOCAL_IP=0.0.0.0
     networks:
       - overlay
     deploy:
-      resources:
-        limits:
-          cpus: "2"
-          memory: 2G
-        reservations:
-          cpus: "1"
-          memory: 1G
-
-
-  spark-worker-2:
-    image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
-    depends_on:
-      - spark-master
-    environment:
-      - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1G
-      - SPARK_DRIVER_MEMORY=1G
-      - SPARK_EXECUTOR_MEMORY=1G
-      - SPARK_WORKLOAD=worker
-      - SPARK_WORKER_PORT=8081
-      - SPARK_LOCAL_IP=0.0.0.0
-    networks:
-      - overlay
-    deploy:
-      resources:
-        limits:
-          cpus: "2"
-          memory: 2G
-        reservations:
-          cpus: "1"
-          memory: 1G
-
-  spark-worker-3:
-    image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
-    depends_on:
-      - spark-master
-    environment:
-      - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1G
-      - SPARK_DRIVER_MEMORY=1G
-      - SPARK_EXECUTOR_MEMORY=1G
-      - SPARK_WORKLOAD=worker
-      - SPARK_WORKER_PORT=8081
-      - SPARK_LOCAL_IP=0.0.0.0
-    networks:
-      - overlay
-    deploy:
+      replicas: 3
       resources:
         limits:
           cpus: "2"
