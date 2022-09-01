@@ -27,4 +27,4 @@ CREATE TABLE IF NOT EXISTS active_users
     partition varchar,
     user_count int,
     PRIMARY KEY ( (tof), partition )
-    ) WITH default_time_to_live = 10;
+) WITH default_time_to_live = 10;
