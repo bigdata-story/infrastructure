@@ -13,3 +13,11 @@ CREATE TABLE IF NOT EXISTS events
     PRIMARY KEY ( (user_id, course_id), session_id, event_type, event_time )
 );
 
+CREATE TABLE IF NOT EXISTS active_users_in_course
+(
+    course_id varchar,
+    partition varchar,
+    user_count int,
+    PRIMARY KEY ( (course_id), partition )
+);
+
