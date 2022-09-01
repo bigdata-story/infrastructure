@@ -12,6 +12,8 @@ services:
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+      - "HEAP_NEWSIZE=128M"
+      - "MAX_HEAP_SIZE=3072M"
     networks:
       - overlay
     deploy:
@@ -21,7 +23,7 @@ services:
           memory: 4G
         reservations:
           cpus: "0.5"
-          memory: 1G
+          memory: 3G
 
   cassandra2:
     image: cassandra:3.11.13
@@ -33,6 +35,8 @@ services:
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+      - "HEAP_NEWSIZE=128M"
+      - "MAX_HEAP_SIZE=3072M"
     networks:
       - overlay
     deploy:
@@ -42,7 +46,7 @@ services:
           memory: 4G
         reservations:
           cpus: "0.5"
-          memory: 1G
+          memory: 3G
 
   cassandra3:
     image: cassandra:3.11.13
@@ -54,12 +58,14 @@ services:
       - "CASSANDRA_CLUSTER_NAME=Story Cluster"
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+      - "HEAP_NEWSIZE=128M"
+      - "MAX_HEAP_SIZE=3072M"
     depends_on:
-      - cassandra0
       - cassandra1
+      - cassandra2
     links:
-      - cassandra0
       - cassandra1
+      - cassandra2
     networks:
       - overlay
     deploy:
@@ -69,7 +75,7 @@ services:
           memory: 4G
         reservations:
           cpus: "0.5"
-          memory: 1G
+          memory: 3G
 
   loadbalancer:
     hostname: cassandra-cluster
@@ -89,6 +95,28 @@ services:
       - overlay
     deploy:
       replicas: 2
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+  cassandra-web:
+    image: ipushc/cassandra-web
+    restart: always
+    ports:
+      - "3000:8083"
+    environment:
+      - "CASSANDRA_HOST=cassandra-cluster"
+    depends_on:
+      - cassandra1
+      - cassandra2
+      - cassandra3
+    networks:
+      - overlay
+    deploy:
       resources:
         limits:
           cpus: "0.50"
