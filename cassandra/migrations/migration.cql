@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS active_users_in_course
     partition varchar,
     user_count int,
     PRIMARY KEY ( (course_id), partition )
-);
+) WITH default_time_to_live = 10;
 
