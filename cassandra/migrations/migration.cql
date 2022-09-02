@@ -1,5 +1,5 @@
 DROP KEYSPACE IF EXISTS story;
-CREATE KEYSPACE story WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '2' };
+CREATE KEYSPACE story WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '1' };
 
 USE story;
 
@@ -11,30 +11,13 @@ CREATE TABLE IF NOT EXISTS events_by_user_course
     session_id varchar,
     event_type varchar,
     event_time timestamp,
-    PRIMARY KEY ( (user_id, course_id), event_time, uuid )
+    PRIMARY KEY ( (user_id, course_id, event_type), event_time, uuid )
 ) with clustering order by (event_time desc);
 
-CREATE TABLE IF NOT EXISTS events_by_user
-(
-    uuid       uuid,
-    course_id  varchar,
-    user_id    int,
-    session_id varchar,
-    event_type varchar,
-    event_time timestamp,
-    PRIMARY KEY ( (user_id), event_time, uuid )
-) with clustering order by (event_time desc);
+create index event_user on events_by_user_course (user_id);
+create index event_course on events_by_user_course (course_id);
+create index event_event_type on events_by_user_course (event_type);
 
-CREATE TABLE IF NOT EXISTS events_by_course
-(
-    uuid       uuid,
-    course_id  varchar,
-    user_id    int,
-    session_id varchar,
-    event_type varchar,
-    event_time timestamp,
-    PRIMARY KEY ( (course_id), event_time, uuid )
-) with clustering order by (event_time desc);
 
 CREATE TABLE IF NOT EXISTS active_users_in_course
 (
