@@ -1,5 +1,5 @@
 DROP KEYSPACE IF EXISTS story;
-CREATE KEYSPACE story WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '1' };
+CREATE KEYSPACE story WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '2' };
 
 USE story;
 
