@@ -37,3 +37,10 @@ CREATE TABLE IF NOT EXISTS event_types_count
     PRIMARY KEY ( (event_type), partition )
 ) WITH default_time_to_live = 600;
 
+CREATE TABLE IF NOT EXISTS course_played_time
+(
+    course_id int,
+    partition varchar,
+    play_time int,
+    PRIMARY KEY ( (course_id), partition )
+) WITH default_time_to_live = 60;
