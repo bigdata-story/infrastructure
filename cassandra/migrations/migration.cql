@@ -21,3 +21,11 @@ CREATE TABLE IF NOT EXISTS active_users_in_course
     PRIMARY KEY ( (course_id), partition )
 ) WITH default_time_to_live = 10;
 
+CREATE TABLE IF NOT EXISTS event_types_count
+(
+    event_type varchar,
+    partition varchar,
+    event_count int,
+    PRIMARY KEY ( (event_type), partition )
+) WITH default_time_to_live = 600;
+
