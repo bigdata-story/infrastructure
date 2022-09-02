@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS active_users_in_course
     PRIMARY KEY ( (course_id), partition )
 ) WITH default_time_to_live = 10;
 
-CREATE TABLE IF NOT EXISTS active_users
+CREATE TABLE IF NOT EXISTS course_played_time
 (
-    tof int,
+    course_id int,
     partition varchar,
-    user_count int,
-    PRIMARY KEY ( (tof), partition )
-) WITH default_time_to_live = 10;
+    play_time int,
+    PRIMARY KEY ( (course_id), partition )
+) WITH default_time_to_live = 60;
