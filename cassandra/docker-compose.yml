@@ -13,69 +13,69 @@ services:
       - "CASSANDRA_DC=dc1"
       - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
       - "HEAP_NEWSIZE=128M"
-      - "MAX_HEAP_SIZE=500M"
+      - "MAX_HEAP_SIZE=3072M"
     networks:
       - overlay
     deploy:
       resources:
         limits:
           cpus: "1"
-          memory: 2G
+          memory: 4G
         reservations:
           cpus: "0.5"
-          memory: 1G
-#
-#  cassandra2:
-#    image: cassandra:3.11.13
-#    restart: always
-#    volumes:
-#      - cassandra_volume2:/var/lib/cassandra
-#    environment:
-#      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
-#      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
-#      - "CASSANDRA_DC=dc1"
-#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
-#      - "HEAP_NEWSIZE=128M"
-#      - "MAX_HEAP_SIZE=3072M"
-#    networks:
-#      - overlay
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1"
-#          memory: 4G
-#        reservations:
-#          cpus: "0.5"
-#          memory: 3G
-#
-#  cassandra3:
-#    image: cassandra:3.11.13
-#    restart: always
-#    volumes:
-#      - cassandra_volume3:/var/lib/cassandra
-#    environment:
-#      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
-#      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
-#      - "CASSANDRA_DC=dc1"
-#      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
-#      - "HEAP_NEWSIZE=128M"
-#      - "MAX_HEAP_SIZE=3072M"
-#    depends_on:
-#      - cassandra1
-#      - cassandra2
-#    links:
-#      - cassandra1
-#      - cassandra2
-#    networks:
-#      - overlay
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "1"
-#          memory: 4G
-#        reservations:
-#          cpus: "0.5"
-#          memory: 3G
+          memory: 3G
+
+  cassandra2:
+    image: cassandra:3.11.13
+    restart: always
+    volumes:
+      - cassandra_volume2:/var/lib/cassandra
+    environment:
+      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+      - "HEAP_NEWSIZE=128M"
+      - "MAX_HEAP_SIZE=3072M"
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 3G
+
+  cassandra3:
+    image: cassandra:3.11.13
+    restart: always
+    volumes:
+      - cassandra_volume3:/var/lib/cassandra
+    environment:
+      - "CASSANDRA_SEEDS=cassandra1,cassandra2"
+      - "CASSANDRA_CLUSTER_NAME=Story Cluster"
+      - "CASSANDRA_DC=dc1"
+      - "CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch"
+      - "HEAP_NEWSIZE=128M"
+      - "MAX_HEAP_SIZE=3072M"
+    depends_on:
+      - cassandra1
+      - cassandra2
+    links:
+      - cassandra1
+      - cassandra2
+    networks:
+      - overlay
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 3G
 
   loadbalancer:
     hostname: cassandra-cluster
@@ -85,16 +85,16 @@ services:
       - ./haproxy:/usr/local/etc/haproxy:ro
     depends_on:
       - cassandra1
-#      - cassandra2
-#      - cassandra3
+      - cassandra2
+      - cassandra3
     links:
       - cassandra1
-#      - cassandra2
-#      - cassandra3
+      - cassandra2
+      - cassandra3
     networks:
       - overlay
     deploy:
-      replicas: 1
+      replicas: 2
       resources:
         limits:
           cpus: "0.50"
