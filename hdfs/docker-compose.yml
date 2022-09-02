@@ -3,7 +3,7 @@ version: "3.9"
 services:
   name-node:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    # restart: always
+    restart: always
     ports:
       - 9870:9870
       - 9000:9000
@@ -18,7 +18,7 @@ services:
 
   data-node1:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    # restart: always
+    restart: always
     depends_on:
       - name-node
     volumes:
@@ -32,7 +32,7 @@ services:
 
   data-node2:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    # restart: always
+    restart: always
     depends_on:
       - name-node
     volumes:
@@ -59,7 +59,7 @@ services:
 
   node-manager:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
-    # restart: always
+    restart: always
     depends_on:
       - resource-manager
     environment:
@@ -71,7 +71,7 @@ services:
 
   history-server:
     image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
-    # restart: always
+    restart: always
     depends_on:
       - resource-manager
     environment:
