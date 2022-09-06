@@ -11,6 +11,7 @@ services:
       - INIT_DAEMON_STEP=setup_spark
       - SPARK_MASTER_HOST=0.0.0.0
       - SPARK_MASTER_PORT=7077
+      - SPARK_PUBLIC_DNS=spark.story.samssh.ir
     networks:
       - overlay
     deploy:
@@ -22,33 +23,89 @@ services:
           cpus: "0.5"
           memory: 512M
 
-  spark-worker:
+  spark-worker1:
     image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
     restart: always
     ports:
-      - 8082:8082
-      - 8081:8081
+      - "8081:8081"
     depends_on:
       - spark-master
     environment:
       - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_CORES=10
-      - SPARK_WORKER_MEMORY=10G
-      - SPARK_DRIVER_MEMORY=10G
-      - SPARK_EXECUTOR_MEMORY=10G
+      - SPARK_WORKER_CORES=3
+      - SPARK_WORKER_MEMORY=4G
+      - SPARK_DRIVER_MEMORY=4G
+      - SPARK_EXECUTOR_MEMORY=4G
       - SPARK_WORKLOAD=worker
       - SPARK_WORKER_PORT=8081
+      - SPARK_PUBLIC_DNS=spark.story.samssh.ir
     networks:
       - overlay
     deploy:
       replicas: 1
       resources:
         limits:
-          cpus: "16"
-          memory: 20G
+          cpus: "4"
+          memory: 4G
         reservations:
-          cpus: "10"
-          memory: 10G
+          cpus: "3"
+          memory: 3G
+
+  spark-worker2:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
+    restart: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=3
+      - SPARK_WORKER_MEMORY=4G
+      - SPARK_DRIVER_MEMORY=4G
+      - SPARK_EXECUTOR_MEMORY=4G
+      - SPARK_WORKLOAD=worker
+      - SPARK_WORKER_PORT=8082
+      - SPARK_PUBLIC_DNS=spark.story.samssh.ir
+    networks:
+      - overlay
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+        reservations:
+          cpus: "3"
+          memory: 3G
+
+  spark-worker3:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2-java11
+    restart: always
+    ports:
+      - "8083:8083"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=3
+      - SPARK_WORKER_MEMORY=4G
+      - SPARK_DRIVER_MEMORY=4G
+      - SPARK_EXECUTOR_MEMORY=4G
+      - SPARK_WORKLOAD=worker
+      - SPARK_WORKER_PORT=8083
+      - SPARK_PUBLIC_DNS=spark.story.samssh.ir
+    networks:
+      - overlay
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+        reservations:
+          cpus: "3"
+          memory: 3G
 
   spark-history-server:
     image: bde2020/spark-history-server:3.1.1-hadoop3.2-java11
